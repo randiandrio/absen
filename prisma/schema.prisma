@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_URL")
+}
+
+model Sekolah {
+  id                  Int             @id @default(autoincrement())
+  nama                String?     
+  alamat              String?     
+  telpon              String?     
+  email               String?     
+  logo                String?     
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  admin               Admin[]
+  device              Device[]
+  kelas               Kelas[]
+  setting             Setting[]
+  user                User[]
+} 
+
+model Admin {
+  id                  Int             @id @default(autoincrement())
+  sekolahId           Int
+  nama                String?     
+  username            String          @unique
+  password            String
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+} 
+
+model Device {
+  id                  Int             @id @default(autoincrement())
+  sekolahId           Int
+  deviceID            Int
+  deviceIP            String
+  canSync             Int             @default(0)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+} 
+
+model Kelas {
+  id                  Int             @id @default(autoincrement())
+  sekolahId           Int
+  nama                String
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+  user                User[]
+} 
+
+model Setting {
+  id                  Int             @id @default(autoincrement())
+  sekolahId           Int
+  hari                String
+  awal                String
+  akhir               String
+  terlambat           Int
+  pulang              String
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+  @@unique([hari, sekolahId], name: "hari_sekolahId")
+} 
+
+model User {
+  id                  Int             @id @default(autoincrement())
+  sekolahId           Int
+  kelasId             Int?
+  nama                String
+  jenisKelamin        String
+  tempatLahir         String
+  tanggalLahir        String
+  alamat              String
+  picInfo             String?         @db.Text
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+  kelas               Kelas?          @relation(fields: [kelasId], references: [id])
+} 
