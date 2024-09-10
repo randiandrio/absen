@@ -62,6 +62,10 @@ function Add({ reload }: { reload: Function }) {
   };
 
   const handleScan = async () => {
+    // fetch("/api/getSysParam")
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data));
+
     await axios
       .post(
         `http://${deviceIP}/action/GetSysParam`,
