@@ -39,7 +39,14 @@ const nextConfig = {
     };
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://192.168.1.10/:path*",
+      },
+    ];
+  },
 };
 
-// module.exports = nextConfig;
 export default nextConfig;
