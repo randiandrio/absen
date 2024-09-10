@@ -14,8 +14,10 @@ export const GET = async (
     secret: process.env.NEXTAUTH_SECRET,
   });
 
+  const adminLogin = token as unknown as AdminLogin;
+
   if (params.slug[0] === "get") {
-    const result = await Get();
+    const result = await Get(adminLogin);
     return NextResponse.json(result, { status: 200 });
   }
 
@@ -46,30 +48,34 @@ export const PATCH = async (
   }
 };
 
-async function Get() {
-  const result = await prisma.device.findMany();
+async function Get(admin: AdminLogin) {
+  const result = await prisma.device.findMany({
+    where: {
+      sekolahId: Number(admin.sekolahId),
+    },
+  });
   return result;
 }
 
 async function Post(data: any, admin: AdminLogin) {
-  if (String(data.get("method")) == "add") {
-    await prisma.device.create({
-      data: {
+  await prisma.device.upsert({
+    where: {
+      deviceId_sekolahId: {
         sekolahId: Number(admin.sekolahId),
         deviceID: Number(data.get("deviceID")),
-        deviceIP: String(data.get("deviceIP")),
       },
-    });
-  } else {
-    await prisma.device.update({
-      where: { id: Number(data.get("id")) },
-      data: {
-        deviceID: Number(data.get("deviceID")),
-        deviceIP: String(data.get("deviceIP")),
-      },
-    });
-  }
-  return { err: false, msg: "Post Device Sukses" };
+    },
+    update: {
+      deviceIP: String(data.get("deviceIP")),
+    },
+    create: {
+      sekolahId: Number(admin.sekolahId),
+      deviceID: Number(data.get("deviceID")),
+      deviceIP: String(data.get("deviceIP")),
+    },
+  });
+
+  return { error: false, message: "Post Device Sukses" };
 }
 
 async function Delete(data: any) {

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { Device } from "@prisma/client";
-import Update from "./action/update";
 import Delete from "./action/Delete";
 import Add from "./action/Add";
 
@@ -51,10 +50,7 @@ export default function InfoPage() {
       button: true,
       cell: (row) => (
         <>
-          <div className="d-flex">
-            <Update reload={reload} device={row} />
-            <Delete reload={reload} device={row} />
-          </div>
+          <Delete reload={reload} device={row} />
         </>
       ),
     },

@@ -43,6 +43,7 @@ model Device {
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
   sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+  @@unique([deviceID, sekolahId], name: "deviceId_sekolahId")
 } 
 
 model Kelas {
