@@ -52,9 +52,11 @@ function Add({ reload }: { reload: Function }) {
   };
 
   const handleScan = async () => {
-    fetch(`http://${deviceIP}/GetSysParam`)
+    fetch(`http://${deviceIP}/action/GetSysParam`)
       .then((res) => res.json())
-      .then((x) => {});
+      .then((x) => {
+        console.log(x);
+      });
   };
 
   return (
