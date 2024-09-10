@@ -62,30 +62,36 @@ function Add({ reload }: { reload: Function }) {
   };
 
   const handleScan = async () => {
-    await axios
-      .post(
-        `http://${deviceIP}/action/GetSysParam`,
-        {},
-        {
-          timeout: 1000,
-          auth: {
-            username: "admin",
-            password: "admin",
-          },
-        }
-      )
-      .then((response) => {
-        setDeviceID(response.data.info.DeviceID);
-      })
-      .catch((error) => {
-        Swal.fire({
-          title: "Error",
-          text: "Device tidak ditemukan",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+    fetch("/api/sysparam")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
       });
+
+    // await axios
+    //   .post(
+    //     `http://${deviceIP}/action/GetSysParam`,
+    //     {},
+    //     {
+    //       timeout: 1000,
+    //       auth: {
+    //         username: "admin",
+    //         password: "admin",
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     setDeviceID(response.data.info.DeviceID);
+    //   })
+    //   .catch((error) => {
+    //     Swal.fire({
+    //       title: "Error",
+    //       text: "Device tidak ditemukan",
+    //       icon: "error",
+    //       showConfirmButton: false,
+    //       timer: 1500,
+    //     });
+    //   });
   };
 
   return (

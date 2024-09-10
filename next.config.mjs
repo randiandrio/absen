@@ -39,14 +39,6 @@ const nextConfig = {
     };
     return config;
   },
-  async rewrites() {
-    return [
-      {
-        source: "/action/:path*",
-        destination: "http://192.168.1.10/action/:path*",
-      },
-    ];
-  },
 };
 
 export default nextConfig;
