@@ -35,7 +35,6 @@ function Add({ reload, listKelas }: { reload: Function; listKelas: Kelas[] }) {
     const cropper = cropperRef.current?.cropper;
     if (cropper) {
       setPicInfo(cropper.getCroppedCanvas().toDataURL());
-      console.log(cropper.getCroppedCanvas().toDataURL());
     }
   };
 
@@ -106,7 +105,7 @@ function Add({ reload, listKelas }: { reload: Function; listKelas: Kelas[] }) {
       <button
         onClick={handleShow}
         type="button"
-        className="btn btn-primary light"
+        className="btn me-2 btn-primary light"
       >
         Tambah User
       </button>
@@ -129,6 +128,7 @@ function Add({ reload, listKelas }: { reload: Function; listKelas: Kelas[] }) {
                 style={{ height: 400, width: "100%" }}
                 // Set konfigurasi Cropper.js
                 initialAspectRatio={1}
+                crop={getCropData}
                 guides={false}
                 cropBoxResizable={true}
                 ref={cropperRef}
@@ -136,16 +136,6 @@ function Add({ reload, listKelas }: { reload: Function; listKelas: Kelas[] }) {
                 dragMode="move"
                 autoCropArea={1}
               />
-            )}
-
-            {image && (
-              <button
-                onClick={getCropData}
-                type="button"
-                className="btn btn-block btn-primary light"
-              >
-                Crop Image
-              </button>
             )}
 
             <div className="mb-3 mt-3 row">

@@ -3,12 +3,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Image from "next/image";
-import { apiImg, tglIndo } from "@/app/helper";
+import { tampilLoading, tglIndo } from "@/app/helper";
 import Add from "../../action/Add";
-import { Kelas } from "@prisma/client";
+import { Kelas, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Update from "../../action/update";
 import Delete from "../../action/Delete";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const customStyles = {
   headCells: {
@@ -20,12 +22,18 @@ const customStyles = {
   },
 };
 
-export default function User({ params }: { params: { slug: string[] } }) {
+export default function UserPage({ params }: { params: { slug: string[] } }) {
   const [kelas, setKelas] = useState(params.slug[0]);
   const [listKelas, setListKelas] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const router = useRouter();
+
+  const [isPost, setPost] = useState(false);
+
+  if (isPost) {
+    tampilLoading();
+  }
 
   useEffect(() => {
     loadKelas();
@@ -46,6 +54,66 @@ export default function User({ params }: { params: { slug: string[] } }) {
       .then((res) => res.json())
       .then((x) => {
         setListKelas(x);
+      });
+  };
+
+  const post = async (datas: any[]) => {
+    let requestData: any = {
+      operator: "AddPersons",
+      DeviceID: 2416785,
+      Total: data.length,
+    };
+
+    for (let i = 0; i < datas.length; i++) {
+      requestData[`Personinfo_${i}`] = {
+        PersonType: 0,
+        Name: datas[i].Name,
+        CustomizeID: datas[i].CustomizeID,
+        isCheckSimilarity: 0,
+        picinfo: datas[i].picinfo,
+      };
+    }
+
+    const requestDataJson = JSON.stringify(requestData);
+
+    await axios
+      .post(`http://192.168.1.10/action/AddPersons`, requestDataJson, {
+        timeout: 60000,
+        auth: {
+          username: "admin",
+          password: "admin",
+        },
+      })
+      .then((response) => {
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        Swal.fire({
+          title: "Error",
+          text: "Device tidak ditemukan",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  };
+
+  const syncData = async () => {
+    setLoading(true);
+    fetch(`/user/api/data_user`)
+      .then((res) => res.json())
+      .then((x: any[]) => {
+        var allUser = x.map(function (item) {
+          return {
+            PersonType: 0,
+            Name: item.nama,
+            CustomizeID: item.id,
+            isCheckSimilarity: 1,
+            picinfo: item.picInfo,
+          };
+        });
+        post(allUser);
       });
   };
 
@@ -134,7 +202,16 @@ export default function User({ params }: { params: { slug: string[] } }) {
               />
             </div>
           </div>
-          <Add reload={reload} listKelas={listKelas} />
+          <div>
+            <Add reload={reload} listKelas={listKelas} />
+            <button
+              onClick={syncData}
+              type="button"
+              className="btn btn-danger light"
+            >
+              Sync Data
+            </button>
+          </div>
         </div>
       </div>
     </div>

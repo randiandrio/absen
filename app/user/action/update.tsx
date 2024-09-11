@@ -43,7 +43,6 @@ function Update({
     const cropper = cropperRef.current?.cropper;
     if (cropper) {
       setPicInfo(cropper.getCroppedCanvas().toDataURL());
-      console.log(cropper.getCroppedCanvas().toDataURL());
     }
   };
 
@@ -131,19 +130,10 @@ function Update({
                 cropBoxResizable={true}
                 ref={cropperRef}
                 viewMode={1}
+                crop={getCropData}
                 dragMode="move"
                 autoCropArea={1}
               />
-            )}
-
-            {image && (
-              <button
-                onClick={getCropData}
-                type="button"
-                className="btn btn-block btn-primary light"
-              >
-                Crop Image
-              </button>
             )}
 
             <div className="mb-3 mt-3 row">

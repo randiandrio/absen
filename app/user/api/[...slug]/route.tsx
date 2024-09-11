@@ -26,6 +26,11 @@ export const GET = async (
     return NextResponse.json(result, { status: 200 });
   }
 
+  if (params.slug[0] === "data_user") {
+    const result = await DataUser(adminLogin);
+    return NextResponse.json(result, { status: 200 });
+  }
+
   return NextResponse.json(false);
 };
 
@@ -64,6 +69,15 @@ async function Get(admin: AdminLogin, kelas: any) {
     },
     orderBy: {
       nama: "asc",
+    },
+  });
+  return result;
+}
+
+async function DataUser(admin: AdminLogin) {
+  const result = await prisma.user.findMany({
+    where: {
+      sekolahId: Number(admin.sekolahId),
     },
   });
   return result;
