@@ -85,6 +85,7 @@ export default function UserPage({ params }: { params: { slug: string[] } }) {
         },
       })
       .then((response) => {
+        console.log(response);
         setLoading(false);
       })
       .catch((error) => {

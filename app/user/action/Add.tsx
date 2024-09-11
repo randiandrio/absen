@@ -73,7 +73,6 @@ function Add({ reload, listKelas }: { reload: Function; listKelas: Kelas[] }) {
     formData.append("picInfo", String(picInfo));
     const x = await axios.patch("/user/api/post", formData);
     const pesan = (await x.data) as resData;
-
     if (!pesan.error) {
       clearForm();
       handleClose();
