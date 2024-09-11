@@ -21,6 +21,7 @@ model Sekolah {
   kelas               Kelas[]
   setting             Setting[]
   user                User[]
+  presensi            Presensi[]
 } 
 
 model Admin {
@@ -84,4 +85,18 @@ model User {
   updatedAt           DateTime        @updatedAt
   sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
   kelas               Kelas?          @relation(fields: [kelasId], references: [id])
+  presensi            Presensi[]
 } 
+
+model Presensi{
+  id                  Int             @id @default(autoincrement())
+  sekolahId           Int
+  userId              Int
+  tanggal             String
+  status              String
+  mode                String          @default("masuk")          
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  sekolah             Sekolah         @relation(fields: [sekolahId], references: [id], onDelete: Cascade)
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
