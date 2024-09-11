@@ -19,13 +19,15 @@ async function Post(data: any) {
 
   if (user.length < 1) return false;
 
-  const tanggal = moment().format("YYYY-MM-DD HH:mm");
+  const tanggal = moment().format("YYYY-MM-DD");
+  const pukul = moment().format("HH:mm");
   console.log(tanggal);
 
   const response = await prisma.presensi.create({
     data: {
       sekolahId: Number(user[0].sekolahId),
       tanggal: tanggal,
+      pukul: pukul,
       status: "Hadir",
       userId: Number(user[0].id),
     },
