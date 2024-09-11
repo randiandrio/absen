@@ -79,7 +79,6 @@ function Update({ reload, setting }: { reload: Function; setting: Setting }) {
               <div className="col-sm-7">
                 <select
                   required
-                  placeholder="Pilih Hari"
                   className="form-control"
                   value={hari}
                   onChange={(e) => {

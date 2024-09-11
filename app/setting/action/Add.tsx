@@ -88,7 +88,6 @@ function Add({ reload }: { reload: Function }) {
               <div className="col-sm-7">
                 <select
                   required
-                  placeholder="Pilih Hari"
                   className="form-control"
                   value={hari}
                   onChange={(e) => {
