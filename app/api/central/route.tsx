@@ -13,19 +13,21 @@ export const POST = async (request: NextRequest) => {
 };
 
 async function Post(data: any) {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findMany({
     where: { id: data.CustomizeID },
   });
+
+  if (user.length < 1) return false;
 
   const x = moment().add(7, "hour");
   const tanggal = moment(x).format("YYYY-MM-DD");
 
   const response = await prisma.presensi.create({
     data: {
-      sekolahId: Number(user?.sekolahId),
+      sekolahId: Number(user[0].sekolahId),
       tanggal: tanggal,
       status: "Hadir",
-      userId: Number(user?.id),
+      userId: Number(user[0].id),
     },
   });
 
