@@ -16,10 +16,16 @@ async function Post(data: any) {
   const user = await prisma.user.findUnique({
     where: { id: data.CustomizeID },
   });
+
+  const x = moment().add(7, "hour");
+  const tanggal = moment(x).format("YYYY-MM-DD");
+  const pukul = moment(x).format("HH:mm");
+
   const response = await prisma.presensi.create({
     data: {
       sekolahId: Number(user?.sekolahId),
-      tanggal: moment().format("YYYY-MM-DD"),
+      tanggal: tanggal,
+      pukul: pukul,
       status: "Hadir",
       userId: Number(user?.id),
     },
