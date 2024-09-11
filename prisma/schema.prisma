@@ -93,7 +93,6 @@ model Presensi{
   sekolahId           Int
   userId              Int
   tanggal             String
-  pukul               String
   status              String
   mode                String          @default("masuk")          
   createdAt           DateTime        @default(now())
