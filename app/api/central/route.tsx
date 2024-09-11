@@ -25,7 +25,7 @@ async function Post(data: any) {
     data: {
       sekolahId: Number(user?.sekolahId),
       tanggal: tanggal,
-      pukul: pukul,
+      pukul: "pukul",
       status: "Hadir",
       userId: Number(user?.id),
     },
