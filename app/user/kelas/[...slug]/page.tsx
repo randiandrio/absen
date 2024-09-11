@@ -11,6 +11,7 @@ import Update from "../../action/update";
 import Delete from "../../action/Delete";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Reset from "../../action/Reset";
 
 const customStyles = {
   headCells: {
@@ -203,15 +204,23 @@ export default function UserPage({ params }: { params: { slug: string[] } }) {
               />
             </div>
           </div>
-          <div>
-            <Add reload={reload} listKelas={listKelas} />
-            <button
-              onClick={syncData}
-              type="button"
-              className="btn btn-danger light"
-            >
-              Sync Data
-            </button>
+          <div className="row">
+            <div className="col-2">
+              <Add reload={reload} listKelas={listKelas} />
+            </div>
+
+            <div className="col-2">
+              <button
+                onClick={syncData}
+                type="button"
+                className="btn btn-block btn-primary light"
+              >
+                Sync Data
+              </button>
+            </div>
+            <div className="col-2">
+              <Reset />
+            </div>
           </div>
         </div>
       </div>

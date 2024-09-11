@@ -104,7 +104,7 @@ function Add({ reload, listKelas }: { reload: Function; listKelas: Kelas[] }) {
       <button
         onClick={handleShow}
         type="button"
-        className="btn me-2 btn-primary light"
+        className="btn btn-block me-2 btn-primary light"
       >
         Tambah User
       </button>
