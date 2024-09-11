@@ -11,17 +11,17 @@ export const POST = async (request: NextRequest) => {
 };
 
 async function Post(data: any) {
-  const user = await prisma.user.findUnique({
-    where: { id: data.CustomizeID },
-  });
-  const response = await prisma.presensi.create({
-    data: {
-      sekolahId: Number(user?.sekolahId),
-      tanggal: moment().format("YYYY-MM-DD"),
-      status: "Hadir",
-      userId: Number(user?.id),
-    },
-  });
+  //   const user = await prisma.user.findUnique({
+  //     where: { id: data.CustomizeID },
+  //   });
+  //   const response = await prisma.presensi.create({
+  //     data: {
+  //       sekolahId: Number(user?.sekolahId),
+  //       tanggal: moment().format("YYYY-MM-DD"),
+  //       status: "Hadir",
+  //       userId: Number(user?.id),
+  //     },
+  //   });
 
-  return response;
+  return data;
 }
