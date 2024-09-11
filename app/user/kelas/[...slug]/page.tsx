@@ -55,7 +55,7 @@ export default function User({ params }: { params: { slug: string[] } }) {
       width: "100px",
       cell: (row) => (
         <Image
-          src={`${apiImg}/${row.picInfo}`}
+          src={row.picInfo}
           width="60"
           height="60"
           className="rounded-circle my-2"
@@ -106,7 +106,6 @@ export default function User({ params }: { params: { slug: string[] } }) {
               <div className="col-sm-3 mb-0">
                 <select
                   required
-                  placeholder="Pilih Kelas"
                   className="form-control"
                   value={kelas}
                   onChange={(e) => {

@@ -92,6 +92,7 @@ async function Post(data: any, admin: AdminLogin) {
         tempatLahir: String(data.get("tempatLahir")),
         tanggalLahir: String(data.get("tanggalLahir")),
         alamat: String(data.get("alamat")),
+        picInfo: String(data.get("picInfo")),
       },
     });
   } else {
@@ -106,6 +107,14 @@ async function Post(data: any, admin: AdminLogin) {
         alamat: String(data.get("alamat")),
       },
     });
+    if (data.get("picInfo")) {
+      await prisma.user.update({
+        where: { id: Number(data.get("id")) },
+        data: {
+          picInfo: String(data.get("picInfo")),
+        },
+      });
+    }
   }
   return { err: false, msg: "Post user Sukses" };
 }

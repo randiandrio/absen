@@ -1,12 +1,14 @@
 "use client";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Swal from "sweetalert2";
 import { resData } from "next-auth";
-import Image from "next/image";
-import { tampilLoading, uploadGambar } from "@/app/helper";
+import { tampilLoading } from "@/app/helper";
 import { Kelas, User } from "@prisma/client";
+
+import "cropperjs/dist/cropper.css";
+import { Cropper } from "react-cropper";
 
 function Update({
   reload,
@@ -25,33 +27,53 @@ function Update({
   const [alamat, setAlamat] = useState(user.alamat);
   const [picInfo, setPicInfo] = useState("");
 
+  const [image, setImage] = useState<string | null>(null);
+  const cropperRef = useRef<HTMLImageElement>(null);
+
+  const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = () => setImage(reader.result as string);
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
+
+  const getCropData = () => {
+    // @ts-ignore
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      setPicInfo(cropper.getCroppedCanvas().toDataURL());
+      console.log(cropper.getCroppedCanvas().toDataURL());
+    }
+  };
+
   const [show, setShow] = useState(false);
   const handleClose = () => {
     setShow(false);
   };
   const handleShow = () => setShow(true);
-  const [image, setImage] = useState<File>();
-  const [fotoUrlSelect, setFotoUrlSelect] = useState("/template/noimage.jpg");
   const [isPost, setPost] = useState(false);
 
   if (isPost) {
     tampilLoading();
   }
 
-  const previewGambar = (event: any) => {
-    if (event.target.files && event.target.files[0]) {
-      const i = event.target.files[0];
-      setImage(i);
-      setFotoUrlSelect(URL.createObjectURL(i));
-    }
-  };
-
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    setPost(true);
 
+    if (picInfo == "" && image != null) {
+      Swal.fire({
+        title: "Ups",
+        text: "Silahkan klik crop image",
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+    setPost(true);
     const formData = new FormData();
-    formData.append("method", "update");
+    formData.append("method", "edit");
     formData.append("id", String(user.id));
     formData.append("kelasId", String(kelasId));
     formData.append("nama", String(nama));
@@ -59,15 +81,15 @@ function Update({
     formData.append("tempatLahir", String(tempatLahir));
     formData.append("tanggalLahir", String(tanggalLahir));
     formData.append("alamat", String(alamat));
-    // formData.append("picInfo", String(picInfo));
+    if (picInfo != "") {
+      formData.append("picInfo", String(picInfo));
+    }
     const x = await axios.patch("/user/api/post", formData);
     const pesan = (await x.data) as resData;
-
-    if (!pesan.error) {
-      handleClose();
-      reload();
-    }
-
+    reload();
+    setImage(null);
+    setPicInfo("");
+    handleClose();
     setPost(false);
     Swal.fire({
       title: "Success",
@@ -96,9 +118,46 @@ function Update({
       >
         <form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Tambahkan User</Modal.Title>
+            <Modal.Title>Edit User</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            {image && (
+              <Cropper
+                src={image}
+                style={{ height: 400, width: "100%" }}
+                // Set konfigurasi Cropper.js
+                initialAspectRatio={1}
+                guides={false}
+                cropBoxResizable={true}
+                ref={cropperRef}
+                viewMode={1}
+                dragMode="move"
+                autoCropArea={1}
+              />
+            )}
+
+            {image && (
+              <button
+                onClick={getCropData}
+                type="button"
+                className="btn btn-block btn-primary light"
+              >
+                Crop Image
+              </button>
+            )}
+
+            <div className="mb-3 mt-3 row">
+              <label className="col-sm-4 col-form-label">Foto</label>
+              <div className="col-sm-8">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="form-control"
+                  onChange={onSelectFile}
+                />
+              </div>
+            </div>
+
             <div className="mb-3 row">
               <label className="col-sm-4 col-form-label">Nama</label>
               <div className="col-sm-8">
@@ -117,7 +176,6 @@ function Update({
               <div className="col-sm-8">
                 <select
                   required
-                  placeholder="Pilih Kelas"
                   className="form-control"
                   value={Number(kelasId)}
                   onChange={(e) => {
@@ -139,7 +197,6 @@ function Update({
               <div className="col-sm-8">
                 <select
                   required
-                  placeholder="Pilih Kelas"
                   className="form-control"
                   value={jenisKelamin}
                   onChange={(e) => {
