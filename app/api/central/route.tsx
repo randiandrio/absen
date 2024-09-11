@@ -8,7 +8,7 @@ export const POST = async (request: NextRequest) => {
   const body: any = await request.json();
   const result = await Post(body);
 
-  console.log(result);
+  console.log(result?.nama);
   return NextResponse.json(true, { status: 200 });
 };
 
