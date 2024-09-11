@@ -19,8 +19,8 @@ async function Post(data: any) {
 
   if (user.length < 1) return false;
 
-  const x = moment().add(7, "hour");
-  const tanggal = moment(x).format("YYYY-MM-DD");
+  const x = moment();
+  const tanggal = moment().format("YYYY-MM-DD");
   console.log(x);
 
   const response = await prisma.presensi.create({
