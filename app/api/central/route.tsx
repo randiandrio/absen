@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 
 export const POST = async (request: NextRequest) => {
   const body: any = await request.json();
-  const response = await Post(body);
-  return NextResponse.json(response, { status: 200 });
+
+  return NextResponse.json(body, { status: 200 });
 };
 
 async function Post(data: any) {
